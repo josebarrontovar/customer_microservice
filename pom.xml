@@ -67,6 +67,12 @@
             <version>8.0.33</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.2.0</version> <!-- Puedes verificar la última versión en el repositorio de Maven -->
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>

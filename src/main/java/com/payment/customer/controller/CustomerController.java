@@ -1,7 +1,11 @@
 package com.payment.customer.controller;
 
+import com.payment.customer.Service.CustomerService;
+import com.payment.customer.dao.CustomerDTO;
 import com.payment.customer.entities.Customer;
 import com.payment.customer.repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,50 +16,18 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/customer")
+@RequiredArgsConstructor
 public class CustomerController {
 
-    @Autowired
-    CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    @GetMapping()
-    public List<Customer> getFindAll() {
-        return customerRepository.findAll();
-    }
+   @PostMapping("/createCustomer")
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO){
+       return ResponseEntity.ok(customerService.createCustomer(customerDTO));
+   }
 
-    @GetMapping("/{id}")
-    public Customer getFindById(@PathVariable Long id) {
-        return customerRepository.findById(id).orElse(null);
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> postCustomer(Customer customer) {
-        Customer savedCustomer = customerRepository.save(customer);
-        return ResponseEntity.ok(savedCustomer);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> putCustomer(@PathVariable Long id, @RequestBody Customer customer) {
-        Optional<Customer> existCustomer = customerRepository.findById(id);
-        if (existCustomer.isPresent()) {
-            Customer newCustomer = existCustomer.get();
-            newCustomer.setName(customer.getName());
-            newCustomer.setPhoneNumber(customer.getPhoneNumber());
-            Customer saveCustomer = customerRepository.save(newCustomer);
-            return ResponseEntity.ok(saveCustomer);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found");
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCustomer(@PathVariable Long id) {
-        Optional<Customer> existCustomer = customerRepository.findById(id);
-        if (existCustomer.isPresent()) {
-            customerRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
+   @GetMapping("/allCustomers")
+    public ResponseEntity<List<CustomerDTO>> getAllCustomer(){
+       return ResponseEntity.ok(customerService.getAllCustomer());
+   }
 }
