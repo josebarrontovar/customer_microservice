@@ -12,7 +12,6 @@ import java.util.List;
 @RequestMapping("/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
 
     @PostMapping("/createUser")
